@@ -1,135 +1,156 @@
-/*
-Dynamic Polymorphism in real life says that 2 Objects coming from same
-family will respond to same stimulus differently. Like in real world Manual
-car and Electric car will respond to accelerate() differently.
+/**
+ * Demonstrates Dynamic Polymorphism (Runtime Polymorphism) in Java.
+ *
+ * Dynamic polymorphism is achieved through method overriding.
+ * The method to be called is determined at runtime based on the
+ * actual object type, not the reference type.
+ *
+ * Key Concepts:
+ * - Method Overriding
+ * - Runtime binding / Late binding
+ * - Upcasting
+ * - The 'super' keyword
+ */
 
-To represent this in programming, we create a parent class that defines all
-characters and behaviours that are generic to all child classes and are also same in
-all child classes but make those methods abstract that are generic to all
-child classes but all child class will behave differently. Then those child class
-will provide implementation details of these abstract methods the way they want.
-*/
+// Abstract base class representing a generic Car
 abstract class Car {
     protected String brand;
     protected String model;
-    protected boolean isEngineOn;
-    protected int currentSpeed;
+    protected int year;
 
-    public Car(String brand, String model) {
+    public Car(String brand, String model, int year) {
         this.brand = brand;
         this.model = model;
-        this.isEngineOn = false;
-        this.currentSpeed = 0;
+        this.year = year;
     }
 
-    // Common methods for all cars.
-    public void startEngine() {
-        isEngineOn = true;
-        System.out.println(brand + " " + model + " : Engine started.");
+    // Abstract method — subclasses MUST override this
+    public abstract void start();
+
+    // Abstract method — subclasses MUST override this
+    public abstract void stop();
+
+    // Concrete method — can be overridden but doesn't have to be
+    public void displayInfo() {
+        System.out.println("Brand: " + brand);
+        System.out.println("Model: " + model);
+        System.out.println("Year : " + year);
     }
 
-    public void stopEngine() {
-        isEngineOn = false;
-        currentSpeed = 0;
-        System.out.println(brand + " " + model + " : Engine turned off.");
+    // Concrete method demonstrating a shared behaviour
+    public void honk() {
+        System.out.println(brand + " " + model + " goes: Beep Beep!");
     }
-
-    // Abstract methods for dynamic polymorphism
-    public abstract void accelerate();
-    public abstract void brake();
 }
 
+// ManualCar — a concrete subclass of Car
 class ManualCar extends Car {
-    private int currentGear;
+    private int gears;
 
-    public ManualCar(String brand, String model) {
-        super(brand, model);
-        this.currentGear = 0;
+    public ManualCar(String brand, String model, int year, int gears) {
+        super(brand, model, year);
+        this.gears = gears;
     }
 
-    // Specialized method for Manual Car
+    @Override
+    public void start() {
+        System.out.println(brand + " " + model + ": Clutch pressed, key turned — Vroom! Engine started.");
+    }
+
+    @Override
+    public void stop() {
+        System.out.println(brand + " " + model + ": Gear to neutral, handbrake applied — Engine stopped.");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();  // reuse parent implementation
+        System.out.println("Type  : Manual");
+        System.out.println("Gears : " + gears);
+    }
+
     public void shiftGear(int gear) {
-        currentGear = gear;
-        System.out.println(brand + " " + model + " : Shifted to gear " + currentGear);
-    }
-
-    // Overriding accelerate - Dynamic Polymorphism
-    @Override
-    public void accelerate() {
-        if (!isEngineOn) {
-            System.out.println(brand + " " + model + " : Cannot accelerate! Engine is off.");
-            return;
+        if (gear < 1 || gear > gears) {
+            System.out.println("Invalid gear! Valid range: 1 to " + gears);
+        } else {
+            System.out.println(brand + " " + model + ": Shifted to gear " + gear);
         }
-        currentSpeed += 20;
-        System.out.println(brand + " " + model + " : Accelerating to " + currentSpeed + " km/h");
-    }
-
-    // Overriding brake - Dynamic Polymorphism
-    @Override
-    public void brake() {
-        currentSpeed -= 20;
-        if (currentSpeed < 0) currentSpeed = 0;
-        System.out.println(brand + " " + model + " : Braking! Speed is now " + currentSpeed + " km/h");
     }
 }
 
+// ElectricCar — another concrete subclass of Car
 class ElectricCar extends Car {
-    private int batteryLevel;
+    private int batteryCapacityKWh;
+    private int rangeKm;
 
-    public ElectricCar(String brand, String model) {
-        super(brand, model);
-        this.batteryLevel = 100;
+    public ElectricCar(String brand, String model, int year,
+                       int batteryCapacityKWh, int rangeKm) {
+        super(brand, model, year);
+        this.batteryCapacityKWh = batteryCapacityKWh;
+        this.rangeKm = rangeKm;
     }
 
-    // Specialized method for Electric Car
+    @Override
+    public void start() {
+        System.out.println(brand + " " + model + ": Button pressed — Silent hum... Electric motor engaged.");
+    }
+
+    @Override
+    public void stop() {
+        System.out.println(brand + " " + model + ": Regenerative braking activated — Motor disengaged.");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();  // reuse parent implementation
+        System.out.println("Type    : Electric");
+        System.out.println("Battery : " + batteryCapacityKWh + " kWh");
+        System.out.println("Range   : " + rangeKm + " km");
+    }
+
     public void chargeBattery() {
-        batteryLevel = 100;
-        System.out.println(brand + " " + model + " : Battery fully charged!");
-    }
-
-    // Overriding accelerate - Dynamic Polymorphism
-    @Override
-    public void accelerate() {
-        if (!isEngineOn) {
-            System.out.println(brand + " " + model + " : Cannot accelerate! Engine is off.");
-            return;
-        }
-        if (batteryLevel <= 0) {
-            System.out.println(brand + " " + model + " : Battery dead! Cannot accelerate.");
-            return;
-        }
-        batteryLevel -= 10;
-        currentSpeed += 15;
-        System.out.println(brand + " " + model + " : Accelerating to " + currentSpeed
-                           + " km/h. Battery at " + batteryLevel + "%.");
-    }
-
-    // Overriding brake - Dynamic Polymorphism
-    @Override
-    public void brake() {
-        currentSpeed -= 15;
-        if (currentSpeed < 0) currentSpeed = 0;
-        System.out.println(brand + " " + model + " : Regenerative braking! Speed is now "
-                           + currentSpeed + " km/h. Battery at " + batteryLevel + "%.");
+        System.out.println(brand + " " + model + ": Plugged in — Charging battery...");
     }
 }
 
+// Main class to demonstrate dynamic polymorphism
 public class DynamicPolymorphism {
     public static void main(String[] args) {
-        Car myManualCar = new ManualCar("Suzuki", "WagonR");
-        myManualCar.startEngine();
-        myManualCar.accelerate();
-        myManualCar.accelerate();
-        myManualCar.brake();
-        myManualCar.stopEngine();
 
-        System.out.println("----------------------");
+        // Upcasting: parent reference holding child objects
+        // The actual method called is determined at RUNTIME
+        Car[] cars = {
+            new ManualCar("Toyota", "Corolla", 2020, 5),
+            new ElectricCar("Tesla", "Model 3", 2023, 75, 570)
+        };
 
-        Car myElectricCar = new ElectricCar("Tesla", "Model S");
-        myElectricCar.startEngine();
-        myElectricCar.accelerate();
-        myElectricCar.accelerate();
-        myElectricCar.brake();
-        myElectricCar.stopEngine();
+        System.out.println("===== Dynamic Polymorphism Demo =====");
+
+        for (Car car : cars) {
+            System.out.println("\n--- Car Info ---");
+            car.displayInfo();          // overridden method — resolved at runtime
+            System.out.println();
+            car.start();                // overridden method — resolved at runtime
+            car.honk();                 // inherited, not overridden
+            car.stop();                 // overridden method — resolved at runtime
+        }
+
+        System.out.println("\n===== Downcasting Demo =====");
+
+        // Downcasting to access subclass-specific methods
+        Car myCar = new ManualCar("Honda", "Civic", 2021, 6);
+        if (myCar instanceof ManualCar) {
+            ManualCar manualCar = (ManualCar) myCar;  // explicit downcast
+            manualCar.start();
+            manualCar.shiftGear(3);
+            manualCar.shiftGear(8);  // invalid gear
+        }
+
+        Car myEV = new ElectricCar("BMW", "iX", 2022, 100, 630);
+        if (myEV instanceof ElectricCar) {
+            ElectricCar electricCar = (ElectricCar) myEV;  // explicit downcast
+            electricCar.start();
+            electricCar.chargeBattery();
+        }
     }
 }
