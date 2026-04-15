@@ -81,33 +81,28 @@ public:
     }
 
     void brake() {
-        currentSpeed -= 20;
-        if (currentSpeed < 0) currentSpeed = 0;
+        // Ensure speed doesn't go below 0 when braking
+        currentSpeed = max(0, currentSpeed - 20);
         cout << brand << " " << model << " : Braking! Speed is now " << currentSpeed << " km/h" << endl;
     }
 
     void stopEngine() {
         isEngineOn = false;
-        currentGear = 0;
         currentSpeed = 0;
-        cout << brand << " " << model << " : Engine turned off." << endl;
+        currentGear = 0;
+        cout << brand << " " << model << " : Engine stopped." << endl;
     }
 };
 
-// Main Method
 int main() {
-
-    Car* myCar = new SportsCar("Ford", "Mustang");
-
+    Car* myCar = new SportsCar("Ferrari", "488");
     myCar->startEngine();
     myCar->shiftGear(1);
     myCar->accelerate();
-    myCar->shiftGear(2);
     myCar->accelerate();
     myCar->brake();
     myCar->stopEngine();
 
-    delete myCar;    
-
+    delete myCar;
     return 0;
 }
