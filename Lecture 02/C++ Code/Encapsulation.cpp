@@ -46,7 +46,12 @@ public:
         return tyreCompany;
     }
 
+    // Setter validates that tyreCompany is not set to an empty string
     void setTyreCompany(string tyreCompany) {
+        if (tyreCompany.empty()) {
+            cout << "Invalid tyre company name. Keeping existing value: " << this->tyreCompany << endl;
+            return;
+        }
         this->tyreCompany = tyreCompany;
     }
 
@@ -107,9 +112,14 @@ int main() {
 
     // cout << "Current Speed of My Sports Car is set to " << mySportsCar->currentSpeed << endl;
 
-    cout << "Current Speed of My Sports Car is " << mySportsCar->getSpeed() << endl;
+    cout << "Current Speed of My Sports Car is " << mySportsCar->getSpeed() << " km/h" << endl;
+    cout << "Tyre Company: " << mySportsCar->getTyreCompany() << endl;
 
-    delete mySportsCar;    
+    // Test the empty string validation in setTyreCompany
+    mySportsCar->setTyreCompany("");
+    mySportsCar->setTyreCompany("Bridgestone");
+    cout << "Updated Tyre Company: " << mySportsCar->getTyreCompany() << endl;
 
+    delete mySportsCar;
     return 0;
 }
