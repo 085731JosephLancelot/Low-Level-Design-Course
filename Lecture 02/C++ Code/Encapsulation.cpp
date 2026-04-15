@@ -61,8 +61,7 @@ public:
     }
 
     void shiftGear(int gear) {
-        if (!isEngineOn) {
-            cout << brand << " " << model << " : Engine is off! Cannot Shift Gear." << endl;
+        if (!            cout << brand << " " << model << " : Engine is off! Cannot Shift Gear." << endl;
             return;
         }
         currentGear = gear;
@@ -79,6 +78,11 @@ public:
     }
 
     void brake() {
+        // Note: added a check so speed doesn't go negative before the clamp
+        if (currentSpeed == 0) {
+            cout << brand << " " << model << " : Already stopped!" << endl;
+            return;
+        }
         currentSpeed -= 20;
         if (currentSpeed < 0) currentSpeed = 0;
         cout << brand << " " << model << " : Braking! Speed is now " << currentSpeed << " km/h" << endl;
@@ -106,19 +110,6 @@ int main() {
     mySportsCar->accelerate();
     mySportsCar->brake();
     mySportsCar->stopEngine();
-
-    // //Setting arbitrary value to speed.
-    // mySportsCar->currentSpeed = 500;
-
-    // cout << "Current Speed of My Sports Car is set to " << mySportsCar->currentSpeed << endl;
-
-    cout << "Current Speed of My Sports Car is " << mySportsCar->getSpeed() << " km/h" << endl;
-    cout << "Tyre Company: " << mySportsCar->getTyreCompany() << endl;
-
-    // Test the empty string validation in setTyreCompany
-    mySportsCar->setTyreCompany("");
-    mySportsCar->setTyreCompany("Bridgestone");
-    cout << "Updated Tyre Company: " << mySportsCar->getTyreCompany() << endl;
 
     delete mySportsCar;
     return 0;
