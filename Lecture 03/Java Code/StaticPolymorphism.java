@@ -1,78 +1,95 @@
-/*
-Static Polymorphism (Compile-time polymorphism) in real life says that
-the same action can behave differently depending on the input parameters.
-For example, a Manual car can accelerate by a fixed amount or by a
-specific amount you request. In programming, we achieve this via method
-overloading: multiple methods with the same name but different signatures.
-*/
+/**
+ * Static Polymorphism (Compile-Time Polymorphism) in Java
+ * Achieved through Method Overloading
+ *
+ * Method overloading allows multiple methods with the same name
+ * but different parameter lists within the same class.
+ */
 
-class ManualCar {
+class Car {
     private String brand;
     private String model;
-    private boolean isEngineOn;
-    private int currentSpeed;
-    private int currentGear;
+    private int year;
 
-    public ManualCar(String brand, String model) {
+    public Car(String brand, String model, int year) {
         this.brand = brand;
         this.model = model;
-        this.isEngineOn = false;
-        this.currentSpeed = 0;
-        this.currentGear = 0;
+        this.year = year;
     }
 
-    public void startEngine() {
-        isEngineOn = true;
-        System.out.println(brand + " " + model + " : Engine started.");
+    public String getBrand() { return brand; }
+    public String getModel() { return model; }
+    public int getYear()     { return year; }
+
+    // Overloaded method: no parameters
+    public void displayInfo() {
+        System.out.println("Brand: " + brand + ", Model: " + model + ", Year: " + year);
     }
 
-    public void stopEngine() {
-        isEngineOn = false;
-        currentSpeed = 0;
-        System.out.println(brand + " " + model + " : Engine turned off.");
+    // Overloaded method: with a label parameter
+    public void displayInfo(String label) {
+        System.out.println("[" + label + "] Brand: " + brand + ", Model: " + model + ", Year: " + year);
     }
 
-    // Overloading accelerate - Static Polymorphism
-    public void accelerate() {
-        if (!isEngineOn) {
-            System.out.println(brand + " " + model + " : Cannot accelerate! Engine is off.");
-            return;
+    // Overloaded method: with label and include-year flag
+    public void displayInfo(String label, boolean includeYear) {
+        if (includeYear) {
+            System.out.println("[" + label + "] Brand: " + brand + ", Model: " + model + ", Year: " + year);
+        } else {
+            System.out.println("[" + label + "] Brand: " + brand + ", Model: " + model);
         }
-        currentSpeed += 20;
-        System.out.println(brand + " " + model + " : Accelerating to " + currentSpeed + " km/h");
     }
 
-    public void accelerate(int speed) {
-        if (!isEngineOn) {
-            System.out.println(brand + " " + model + " : Cannot accelerate! Engine is off.");
-            return;
-        }
-        currentSpeed += speed;
-        System.out.println(brand + " " + model + " : Accelerating to " + currentSpeed + " km/h");
+    // Overloaded: calculate fuel cost for given distance (km) at fixed rate
+    public double calculateFuelCost(double distanceKm) {
+        double ratePerKm = 5.0; // default rate in currency units
+        return distanceKm * ratePerKm;
     }
 
-    public void brake() {
-        currentSpeed -= 20;
-        if (currentSpeed < 0) {
-            currentSpeed = 0;
-        }
-        System.out.println(brand + " " + model + " : Braking! Speed is now "
-                           + currentSpeed + " km/h");
+    // Overloaded: calculate fuel cost with custom rate
+    public double calculateFuelCost(double distanceKm, double ratePerKm) {
+        return distanceKm * ratePerKm;
     }
 
-    public void shiftGear(int gear) {
-        currentGear = gear;
-        System.out.println(brand + " " + model + " : Shifted to gear " + currentGear);
+    // Overloaded: calculate fuel cost with distance, rate, and efficiency multiplier
+    public double calculateFuelCost(double distanceKm, double ratePerKm, double efficiencyMultiplier) {
+        return distanceKm * ratePerKm * efficiencyMultiplier;
     }
 }
 
 public class StaticPolymorphism {
     public static void main(String[] args) {
-        ManualCar myManualCar = new ManualCar("Suzuki", "WagonR");
-        myManualCar.startEngine();
-        myManualCar.accelerate();      
-        myManualCar.accelerate(40);    
-        myManualCar.brake();
-        myManualCar.stopEngine();
+        Car car = new Car("Toyota", "Corolla", 2022);
+
+        System.out.println("=== Method Overloading: displayInfo ===");
+
+        // Calls displayInfo()
+        car.displayInfo();
+
+        // Calls displayInfo(String)
+        car.displayInfo("Featured Car");
+
+        // Calls displayInfo(String, boolean) — with year
+        car.displayInfo("Featured Car", true);
+
+        // Calls displayInfo(String, boolean) — without year
+        car.displayInfo("Featured Car", false);
+
+        System.out.println();
+        System.out.println("=== Method Overloading: calculateFuelCost ===");
+
+        double distance = 150.0;
+
+        // Calls calculateFuelCost(double)
+        double cost1 = car.calculateFuelCost(distance);
+        System.out.println("Fuel cost (default rate) for " + distance + " km: " + cost1);
+
+        // Calls calculateFuelCost(double, double)
+        double cost2 = car.calculateFuelCost(distance, 6.5);
+        System.out.println("Fuel cost (custom rate 6.5) for " + distance + " km: " + cost2);
+
+        // Calls calculateFuelCost(double, double, double)
+        double cost3 = car.calculateFuelCost(distance, 6.5, 0.85);
+        System.out.println("Fuel cost (custom rate 6.5, efficiency 0.85) for " + distance + " km: " + cost3);
     }
 }
