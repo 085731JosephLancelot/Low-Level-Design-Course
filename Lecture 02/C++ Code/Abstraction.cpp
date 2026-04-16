@@ -86,8 +86,7 @@ public:
             cout << brand << " " << model << " : Car is already stopped." << endl;
             return;
         }
-        currentSpeed -= 20;
-        if (currentSpeed < 0) currentSpeed = 0;
+        currentSpeed = max(0, currentSpeed - 20);
         cout << brand << " " << model << " : Braking... Speed is now " << currentSpeed << " km/h" << endl;
     }
 
@@ -100,9 +99,7 @@ public:
 };
 
 int main() {
-    // Using base class pointer to demonstrate abstraction
     Car* myCar = new SportsCar("Ferrari", "488");
-
     myCar->startEngine();
     myCar->shiftGear(1);
     myCar->accelerate();
