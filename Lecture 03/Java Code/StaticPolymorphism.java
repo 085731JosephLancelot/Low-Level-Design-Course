@@ -41,8 +41,9 @@ class Car {
     }
 
     // Overloaded: calculate fuel cost for given distance (km) at fixed rate
+    // Note: updated default rate to 6.5 to better reflect current fuel prices
     public double calculateFuelCost(double distanceKm) {
-        double ratePerKm = 5.0; // default rate in currency units
+        double ratePerKm = 6.5; // updated default rate in currency units
         return distanceKm * ratePerKm;
     }
 
@@ -85,11 +86,11 @@ public class StaticPolymorphism {
         System.out.println("Fuel cost (default rate) for " + distance + " km: " + cost1);
 
         // Calls calculateFuelCost(double, double)
-        double cost2 = car.calculateFuelCost(distance, 6.5);
-        System.out.println("Fuel cost (custom rate 6.5) for " + distance + " km: " + cost2);
+        double cost2 = car.calculateFuelCost(distance, 8.0);
+        System.out.println("Fuel cost (custom rate 8.0) for " + distance + " km: " + cost2);
 
         // Calls calculateFuelCost(double, double, double)
-        double cost3 = car.calculateFuelCost(distance, 6.5, 0.85);
-        System.out.println("Fuel cost (custom rate 6.5, efficiency 0.85) for " + distance + " km: " + cost3);
+        double cost3 = car.calculateFuelCost(distance, 8.0, 0.9);
+        System.out.println("Fuel cost (custom rate 8.0, efficiency 0.9) for " + distance + " km: " + cost3);
     }
 }
